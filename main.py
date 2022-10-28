@@ -604,7 +604,7 @@ class MainApp(MDApp):
 
             # и если нет рабочих антенн
             if (self.Status.int8_t_ant_state[0] != 1) and (self.Status.int8_t_ant_state[1] != 1)  and \
-               (self.Status.int8_t_ant_state[2] != 1) and (self.Status.int8_t_ant_state[2] != 1):
+               (self.Status.int8_t_ant_state[2] != 1) and (self.Status.int8_t_ant_state[3] != 1):
                 if  self.uiDict['sm'].current != 'screen_no_connection':
                     self.root.ids.status_bar.text = self.root.ids.MainApp.screen_message_no_ant
 
