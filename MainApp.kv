@@ -1,0 +1,619 @@
+<HomePage>:
+    MDBoxLayout:
+        id: MainApp
+        orientation: 'vertical'
+
+# ----------------- Блок переменных------------------------
+        # Описание цветовых схем
+        background_color_green: (43/255, 89/255, 38/255, 1)
+        background_color_yellow: (201/255, 183/255, 14/255, 1)
+        background_color_red: (181/255, 14/255, 14/255, 1)
+        background_color_grey_screen: (128/255, 128/255, 128/255, 1)
+        background_color_grey: (100/255, 100/255, 100/255, 1)
+
+        # цвета статус бара
+        background_color_connection: (100/255, 100/255, 100/255, 1)
+        background_color_ant1: (100/255, 100/255, 100/255, 1)
+        background_color_ant2: (100/255, 100/255, 100/255, 1)
+        background_color_ant3: (100/255, 100/255, 100/255, 1)
+        background_color_ant4: (100/255, 100/255, 100/255, 1)
+        background_color_faza_1: (100/255, 100/255, 100/255, 1)
+        background_color_faza_3: (100/255, 100/255, 100/255, 1)
+        background_color_active: (100/255, 100/255, 100/255, 1)
+        background_active_text: 'Активен'
+
+        icon_size_hint: 1, 0.12
+
+        # состояние антенны
+        antenna_state_ok: " - Подключена"
+        antenna_state_no: " - Отключена"
+        antenna_state_breakage: " - Обрыв"
+        antenna_state_short_circuit: " - Замыкание"
+        antenna_state_absent: " - Не используется"
+
+        antenna_state_1: " - Отключена"
+        antenna_state_2: " - Отключена"
+        antenna_state_3: " - Отключена"
+        antenna_state_4: " - Отключена"
+
+        ant1_current: "0"
+        ant2_current: "0"
+        ant3_current: "0"
+        ant4_current: "0"
+
+        ant1_P: "0"
+        ant2_P: "0"
+        ant3_P: "0"
+        ant4_P: "0"
+
+        ant1_R: "0"
+        ant2_R: "0"
+        ant3_R: "0"
+        ant4_R: "0"
+
+        ant1_L: "0"
+        ant2_L: "0"
+        ant3_L: "0"
+        ant4_L: "0"
+
+        ant1_C: "0"
+        ant2_C: "0"
+        ant3_C: "0"
+        ant4_C: "0"
+
+        ant1_U: "Напряжение низкое"
+        ant2_U: "Напряжение низкое"
+        ant3_U: "Напряжение низкое"
+        ant4_U: "Напряжение низкое"
+
+        # ползунок передачи
+        percent_transmit: "0"
+
+        # номер повтора
+
+        repeat_num: "Статус выполнения"
+
+        # Сообщения неиспарвностей
+        screen_message_220V: "Авария питания 220В"
+        screen_message_380V: "Авария питания 380В"
+        screen_message_current_overload: "Авария: пергерузка по току"
+        screen_message_overheating: "Авария: перегрев"
+        screen_message_driver: "Авария в драйвере"
+        screen_message_driver_connection: "Авария в драйвере"
+        screen_message_ABP: "Авария: АВР заблоикрован"
+        screen_message_I2C: "Авария: ошибка шины I2C"
+
+        screen_message_no_ant: "Нет рабочих антенн"
+        screen_message_text: ""
+
+# ------------- Кнопки навигации --------------
+        MDBottomNavigation:
+            text_color_active: 0, 0, 0, 1
+            size_hint: 1, 0.12
+            MDBottomNavigationItem:
+                name: 'screen 1'
+                text: 'Вызов'
+                icon: 'account-network'
+                on_tab_press: app.on_btn_screen_1()
+
+            MDBottomNavigationItem:
+                name: 'screen 3'
+                text: 'Статус'
+                icon: 'list-status'
+                on_tab_press: app.on_btn_screen_status()
+
+            MDBottomNavigationItem:
+                name: 'screen 2'
+                text: 'Настройки'
+                icon: 'tune'
+                on_tab_press: app.on_btn_screen_2()
+
+            MDBottomNavigationItem:
+                name: 'screen 4'
+                text: 'Команда'
+                icon: 'alarm-panel'
+                on_tab_press: app.on_btn_screen_3()
+            # Описание оснвных экранов которые сдвигаются
+
+        ScreenManager:
+            id: sm
+            on_parent: app.uiDict['sm'] = self
+
+#---------------- Экран "Заглушка"----------------------------------
+
+            MDScreen:
+                name: 'probe'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDLabel:
+                            color: 0, 0, 0, 1
+                            text: ''
+                            halign: "center"
+
+# --------------  Экран "Нет связи" ------------------------------
+            MDScreen:
+                name: 'screen_no_connection'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDLabel:
+                            color: 0, 0, 0, 1
+                            text: 'Нет связи с передатчиком'
+                            halign: "center"
+                            font_style: "H4"
+
+# ---------------------------- Экран Сообщение неиспарвности------------------------------
+            MDScreen:
+                name: 'screen_message'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDLabel:
+                            color: 0, 0, 0, 1
+                            text: MainApp.screen_message_text
+                            halign: "center"
+                            font_style: "H4"
+
+#------------------------------ Экран "Статус"-------------------------------
+
+            MDScreen:
+                name: 'status'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: ' 1. Анетнна №1' + MainApp.antenna_state_1
+                                on_release:  app.on_btn_screen_antenna_1()
+                            OneLineListItem:
+                                text: " 2. Анетнна №2 " +  MainApp.antenna_state_2
+                                on_release: app.on_btn_screen_antenna_2()
+                            OneLineListItem:
+                                text: " 3. Анетнна №3" +  MainApp.antenna_state_3
+                                on_release: app.on_btn_screen_antenna_3()
+                            OneLineListItem:
+                                text: " 4. Анетнна №4" + MainApp.antenna_state_4
+                                on_release: app.on_btn_screen_antenna_4()
+
+# -----------------Экран "Антенна 1"--------------------
+
+            MDScreen:
+                name: 'antenna_1'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: "Анетнна №1" + MainApp.antenna_state_1
+                            OneLineListItem:
+                                text: "       I(ср)    , А  = " + MainApp.ant1_current
+                            OneLineListItem:
+                                text: "       P(ср)    , кВт = "+ MainApp.ant1_P
+                            OneLineListItem:
+                                text: "       R(R эт.) , Ом  = " + MainApp.ant1_R
+                            OneLineListItem:
+                                text: "       L(L эт.) , мГн = " + MainApp.ant1_L
+                            OneLineListItem:
+                                text: "       С(С эт.) , мкФ = " + MainApp.ant1_C
+                            OneLineListItem:
+                                text: MainApp.ant1_U
+
+# -------------------------Экран "Антенна 2"---------------------------------
+            MDScreen:
+                name: 'antenna_2'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: "Анетнна №2" + MainApp.antenna_state_2
+                            OneLineListItem:
+                                text: "       I(ср)    , А  = " + MainApp.ant2_current
+                            OneLineListItem:
+                                text: "       P(ср)    , кВт = " + MainApp.ant2_P
+                            OneLineListItem:
+                                text: "       R(R эт.) , Ом  = " + MainApp.ant2_R
+                            OneLineListItem:
+                                text: "       L(L эт.) , мГн = " + MainApp.ant2_L
+                            OneLineListItem:
+                                text: "       С(С эт.) , мкФ = " + MainApp.ant2_C
+                            OneLineListItem:
+                                text: MainApp.ant2_U
+
+#----------------------- Экран "Антенна 3"-----------------------------------
+
+            MDScreen:
+                name: 'antenna_3'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: "Анетнна №3" + MainApp.antenna_state_3
+                            OneLineListItem:
+                                text: "       I(ср)    , А  = "+ MainApp.ant3_current
+                            OneLineListItem:
+                                text: "       P(ср)    , кВт = " + MainApp.ant3_P
+                            OneLineListItem:
+                                text: "       R(R эт.) , Ом  = " + MainApp.ant3_R
+                            OneLineListItem:
+                                text: "       L(L эт.) , мГн = " + MainApp.ant3_L
+                            OneLineListItem:
+                                text: "       С(С эт.) , мкФ = " + MainApp.ant3_C
+                            OneLineListItem:
+                                text: MainApp.ant3_U
+
+#---------------------------- Экран "Антенна 4"-------------------------------------
+
+            MDScreen:
+                name: 'antenna_4'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: 'Анетнна №4 ' + MainApp.antenna_state_4
+                            OneLineListItem:
+                                text: "       I(ср)    , А   = " + MainApp.ant4_current
+                            OneLineListItem:
+                                text: "       P(ср)    , кВт = " + MainApp.ant4_P
+                            OneLineListItem:
+                                text: "       R(R эт.) , Ом  = " + MainApp.ant4_R
+                            OneLineListItem:
+                                text: "       L(L эт.) , мГн = " + MainApp.ant4_L
+                            OneLineListItem:
+                                text: "       С(С эт.) , мкФ = " + MainApp.ant4_C
+                            OneLineListItem:
+                                text: MainApp.ant4_U
+
+
+#---------------------------- Экран "Вызов"------------------------------------
+
+            MDScreen:
+                name: 'screen_send'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDBoxLayout:
+                            # Ввод для отправки данных
+                            orientation: 'horizontal'
+
+                            MDBoxLayout:
+                                size_hint_y: .4
+                                pos_hint: {'center_x': 0.5, 'center_y': .7}
+                                orientation: 'vertical'
+                                MDBoxLayout:
+                                    size_hint_x: 0.8
+                                    pos_hint: {'center_x': 0.5, 'center_y': .7}
+                                    orientation: 'vertical'
+                                    MDTextField:
+                                        multiline: False
+                                        readonly: True
+                                        halign: "right"
+                                        font_size: 30
+                                        color_mode: "custom"
+                                        text_color: 0, 0, 0, 1
+                                        line_anim: False
+                                        hint_text_color: 0, 0, 0, 1
+                                        fill_color: 0, 0, 0, 1
+                                        text_color_normal: 0, 0, 0, 1
+                                        hint_text_color_normal: 0, 0, 0, 1
+                                        id: solution
+                                        on_parent: app.uiDict['txtInput_write'] = self
+                                        height: max(self.minimum_height, self.parent.height)
+                                        text: '0'
+
+                                MDBoxLayout:
+                                    size_hint_x: 0.8
+                                    pos_hint: {'center_x': 0.5, 'center_y': .4}
+                                    orientation: 'vertical'
+                                    id: status
+                                    MDTextField:
+                                        multiline: False
+                                        readonly: True
+                                        halign: "right"
+                                        font_size: 30
+                                        font_style: "H4"
+                                        text_color: 0, 0, 0, 1
+                                        line_anim: False
+                                        hint_text_color: 0, 0, 0, 1
+                                        fill_color: 0, 0, 0, 1
+                                        hint_text_color_normal: 0, 0, 0, 1
+                                        color_mode: "custom"
+                                        id: status_bar
+                                        on_parent: app.uiDict['txtInput_write'] = self
+                                        height: max(self.minimum_height, self.parent.height)
+                                        text: ''
+                                MDBoxLayout:
+                                    id: progress_bar
+                                    opacity: 0
+                                    size_hint_x: 0.8
+                                    orientation: 'vertical'
+                                    pos_hint: {'center_x': 0.5, 'center_y': .3}
+                                    MDLabel:
+                                        text: MainApp.repeat_num
+                                    MDProgressBar:
+                                        value: int(MainApp.percent_transmit)
+
+                            # Кнопки цифр
+                            MDBoxLayout:
+                                size_hint_y: 1
+                                size_hint_x: .8
+                                orientation: 'vertical'
+                                font_size: 30
+                                MDBoxLayout:
+                                    #adaptive_size: True
+                                    Button:
+                                        id: break_button
+                                        font_size: 30
+                                        text: 'Прервать передачу'
+                                        #on_press: solution.text = app.on_button_press(button_clear.text,solution.text)
+                                        on_press: app.on_btn_break_up()
+
+                                MDBoxLayout:
+                                    Button:
+                                        font_size: 30
+                                        text: '7'
+                                        id: button_7
+                                        on_press: solution.text = app.on_button_press(button_7.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '8'
+                                        id: button_8
+                                        on_press:   solution.text = app.on_button_press(button_8.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '9'
+                                        id: button_9
+                                        on_press:   solution.text = app.on_button_press(button_9.text,solution.text)
+                                MDBoxLayout:
+                                    Button:
+                                        font_size: 30
+                                        text: '4'
+                                        id: button_4
+                                        on_press: solution.text = app.on_button_press(button_4.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '5'
+                                        id: button_5
+                                        on_press: solution.text = app.on_button_press(button_5.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '6'
+                                        id: button_6
+                                        on_press: solution.text = app.on_button_press(button_6.text,solution.text)
+                                MDBoxLayout:
+                                    Button:
+                                        font_size: 30
+                                        text: '1'
+                                        id: button_1
+                                        on_press: solution.text = app.on_button_press(button_1.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '2'
+                                        id: button_2
+                                        on_press: solution.text = app.on_button_press(button_2.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '3'
+                                        id: button_3
+                                        on_press: solution.text = app.on_button_press(button_3.text,solution.text)
+                                MDBoxLayout:
+                                    Button:
+                                        font_size: 30
+                                        text: 'Отправить'
+                                        id: button_send
+                                        on_press: status_bar.text = app.on_button_press(button_send.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: '0'
+                                        id: button_0
+                                        on_press: solution.text = app.on_button_press(button_0.text,solution.text)
+                                    Button:
+                                        font_size: 30
+                                        text: 'Очистка'
+                                        id: button_clear
+                                        on_press: app.on_btn_clear()
+
+# --------------------Экран команда--------------------------
+            MDScreen:
+                name: 'Command'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: "1. Авария Вкл"
+                                on_release: app.on_btn_turn_on_alarm()
+
+
+                            OneLineListItem:
+                                text: "2. Авария Выкл"
+                                on_release: app.on_btn_turn_off_alarm()
+                            OneLineListItem:
+                                text: "3. Тест меток вкл "
+                                on_release: app.on_btn_turn_on_tags()
+                            OneLineListItem:
+                                text: "4. Тест меток выкл "
+                                on_release: app.on_btn_turn_off_tags()
+
+
+# ----------------- Экран Настройки  ----------------------
+
+            MDScreen:
+                name: 'enter_menu'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: "1. Подключение / отключение антенн"
+                                on_release: app.on_btn_screen_turn_antenna()
+
+
+
+# --------------Экран "Подключение / отключение антенн"----------------------
+
+            MDScreen:
+                name: 'turn_antenna'
+                MDBoxLayout:
+                    orientation: 'vertical'
+                    ScrollView:
+                        MDList:
+                            OneLineListItem:
+                                text: ' 1. Анетнна №1' + MainApp.antenna_state_1
+                                on_release:  app.on_btn_turn_antenna_1()
+                            OneLineListItem:
+                                text: " 2. Анетнна №2 " +  MainApp.antenna_state_2
+                                on_release: app.on_btn_turn_antenna_2()
+                            OneLineListItem:
+                                text: " 3. Анетнна №3" +  MainApp.antenna_state_3
+                                on_release: app.on_btn_turn_antenna_3()
+                            OneLineListItem:
+                                text: " 4. Анетнна №4" + MainApp.antenna_state_4
+                                on_release: app.on_btn_turn_antenna_4()
+
+
+
+
+#-------------------- Панель состояний--------------------------
+        MDBoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: 0.1
+
+            MDLabel:
+                id: active
+                text: MainApp.background_active_text
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                halign: "center"
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_active
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                id: ant1_color
+                text: 'Связь'
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                halign: "center"
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_connection
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                id: ant1_color
+                text: 'Антенна 1'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_ant1
+
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                text: 'Антенна 2'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_ant2
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                text: 'Антенна 3'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_ant3
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                text: 'Антенна 4'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_ant4
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                id: mine_name
+                text: 'Название шахты'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_grey
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                text: '1 Фаза'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_faza_1
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDLabel:
+                text: '3 Фаза'
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 1, 1, 1, 1
+                canvas.before:
+                    Color:
+                        rgba: MainApp.background_color_faza_3
+                    Rectangle:
+                        size: self.size
+                        pos: self.pos
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDLabel:
+                    markup: True
+                    id: time
+                    text: '00:00:00'
+                    halign: "center"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: MainApp.background_color_grey
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+            MDBoxLayout:
+                orientation: 'vertical'
+                MDLabel:
+                    id: date
+                    text: "00.00.00"
+                    theme_text_color: "Custom"
+                    text_color: 1, 1, 1, 1
+                    halign: "center"
+                    canvas.before:
+                        Color:
+                            rgba: MainApp.background_color_grey
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+

@@ -1,0 +1,57 @@
+#:kivy 1.9.1
+
+BoxLayout:
+    id: MainApp
+    orientation: 'vertical'
+
+    # Описание цветовых схем
+    background_color_green: (0/255, 128/255, 0/255, 1)
+    background_color_yellow: (255/255, 255/255, 0/255, 1)
+    background_color_red: (255/255, 0/255, 0/255, 1)
+    background_color_grey_screen: (128/255, 128/255, 128/255, 1)
+    background_color_grey: (100/255, 100/255, 100/255, 1)
+
+    # Кнопки навигации
+    BoxLayout:
+        id: box_button
+        orientation: 'horizontal'
+        size_hint: 1, 0.1
+
+        # Кнопка Основной
+        ToggleButton:
+            group: 'screen'
+            size_hint: 1, 1
+            pos_hint: {'top': 1}
+            text: 'Основной'
+            background_color: 1, 1, 1, 1
+            on_release: app.on_btn_screen_2()
+
+        # Кнопка Настройки
+        ToggleButton:
+            group: 'screen'
+            size_hint: 1, 1
+            pos_hint: {'top': 1}
+            text: 'Настройки'
+            background_color: 1, 1, 1, 1
+            on_release: app.on_btn_screen_1()
+
+        # Кнопка Cтатус
+        ToggleButton:
+            group: 'screen'
+            size_hint: 1, 1
+            pos_hint: {'top': 1}
+            text: 'Статус'
+            background_color: 1, 1, 1, 1
+            on_release: app.on_btn_screen_3()
+
+    # Описание оснвных экранов которые сдвигаются
+
+    ScreenManager:
+        id: sm
+
+
+
+
+
+
+

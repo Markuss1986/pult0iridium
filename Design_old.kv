@@ -1,0 +1,346 @@
+#:kivy 1.9.1
+
+BoxLayout:
+    id: MainApp
+    orientation: 'vertical'
+
+    # Описание цветовых схем
+    background_color_green: (0/255, 128/255, 0/255, 1)
+    background_color_yellow: (255/255, 255/255, 0/255, 1)
+    background_color_red: (255/255, 0/255, 0/255, 1)
+    background_color_grey_screen: (128/255, 128/255, 128/255, 1)
+    background_color_grey: (100/255, 100/255, 100/255, 1)
+
+    # Кнопки навигации
+    BoxLayout:
+        id: box_button
+        orientation: 'horizontal'
+        size_hint: 1, 0.15
+
+        # Кнопка Основной
+        ToggleButton:
+            group: 'screen'
+            size_hint: 1, 1
+            pos_hint: {'top': 1}
+            text: 'Основной'
+            background_color: 1, 1, 1, 1
+            on_release: app.on_btn_screen_2()
+
+        # Кнопка Настройки
+        ToggleButton:
+            group: 'screen'
+            size_hint: 1, 1
+            pos_hint: {'top': 1}
+            text: 'Настройки'
+            background_color: 1, 1, 1, 1
+            on_release: app.on_btn_screen_1()
+
+        # Кнопка Cтатус
+        MDRectangleFlatButton:
+            icon: "android"
+            group: 'screen'
+            theme_text_color: "Custom"
+            size_hint: 1, 1
+            pos_hint: {'top': 1}
+            text: 'Статус'
+            #background_color: 1, 1, 1, 1
+            text_color: 0, 0, 1, 1
+            line_color: 0, 0, 1, 1
+            theme_icon_color: "Custom"
+            icon_color: 0, 0, 1, 1
+            on_release: app.on_btn_screen_3()
+
+    MDBottomNavigation:
+        MDBottomNavigationItem:
+            name: 'screen 1'
+            text: 'Основной'
+            icon: 'gmail'
+            badge_icon: "numeric-10"
+
+            MDLabel:
+                text: 'Mail'
+                halign: 'center'
+
+        MDBottomNavigationItem:
+            name: 'screen 2'
+            text: 'Настройки'
+            icon: 'discord'
+            badge_icon: "numeric-5"
+
+            MDLabel:
+                text: 'Discord'
+                halign: 'center'
+
+        MDBottomNavigationItem:
+            name: 'screen 3'
+            text: 'Статус'
+            icon: 'linkedin'
+
+            MDLabel:
+                text: 'LinkedIN'
+                halign: 'center'
+
+    # Описание оснвных экранов которые сдвигаются
+
+
+
+    # Экран "Нет связи"
+    ScreenManager:
+        id: sm
+        on_parent: app.uiDict['sm'] = self
+        Screen:
+            name: 'screen_no_connection'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey_screen
+				Rectangle:
+					size: self.size
+            BoxLayout:
+                orientation: 'vertical'
+                ScrollView:
+
+                    BoxLayout:
+                        Label:
+                            text: 'Нет связи с передачтиком'
+
+        # Экран "Настройки"
+        Screen:
+            name: 'screen_view'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey_screen
+				Rectangle:
+					size: self.size
+
+            BoxLayout:
+                orientation: 'vertical'
+
+                ScrollView:
+                    size_hint_y: None
+                    BoxLayout:
+                        id: box_list
+                        orientation: 'vertical'
+                        on_parent: app.uiDict['box_list'] = self
+                        size_hint_y: None
+                        height: max(self.minimum_height, self.parent.height)
+
+        # Экран "Основной"
+        Screen:
+            name: 'screen_send'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey_screen
+				Rectangle:
+					size: self.size
+            BoxLayout:
+
+                orientation: 'vertical'
+                ScrollView:
+                BoxLayout:
+
+                    # Ввод для отправки данных
+                    orientation: 'horizontal'
+                    BoxLayout:
+                        size_hint_y: .2
+
+                        orientation: 'vertical'
+                        BoxLayout:
+                            size_hint_x: .5
+                            pos_hint: {'bottom': 1}
+                            orientation: 'vertical'
+                            TextInput:
+                                multiline: False
+                                readonly: True
+                                halign: "right"
+                                font_size: 30
+                                id: solution
+                                on_parent: app.uiDict['txtInput_write'] = self
+                                size_hint_y: .1
+                                height: max(self.minimum_height, self.parent.height)
+                                text: '0'
+
+                    # Кнопки цифр
+                    BoxLayout:
+                        orientation: 'vertical'
+
+
+                        BoxLayout:
+                            Button:
+                                text: 'Авария'
+                                on_press: app.on_btn_screen_alarm()
+
+                        BoxLayout:
+                            Button:
+                                text: '7'
+                                id: button_7
+                                on_press: solution.text = app.on_button_press(button_7.text,solution.text)
+                            Button:
+                                text: '8'
+                                id: button_8
+                                on_press:   solution.text = app.on_button_press(button_8.text,solution.text)
+                            Button:
+                                text: '9'
+                                id: button_9
+                                on_press:   solution.text = app.on_button_press(button_9.text,solution.text)
+                        BoxLayout:
+                            Button:
+                                text: '4'
+                                id: button_4
+                                on_press: solution.text = app.on_button_press(button_4.text,solution.text)
+                            Button:
+                                text: '5'
+                                id: button_5
+                                on_press: solution.text = app.on_button_press(button_5.text,solution.text)
+                            Button:
+                                text: '6'
+                                id: button_6
+                                on_press: solution.text = app.on_button_press(button_6.text,solution.text)
+                        BoxLayout:
+                            Button:
+                                text: '1'
+                                id: button_1
+                                on_press: solution.text = app.on_button_press(button_1.text,solution.text)
+                            Button:
+                                text: '2'
+                                id: button_2
+                                on_press: solution.text = app.on_button_press(button_2.text,solution.text)
+                            Button:
+                                text: '3'
+                                id: button_3
+                                on_press: solution.text = app.on_button_press(button_3.text,solution.text)
+                        BoxLayout:
+                            Button:
+                                text: 'Отправить'
+                                id: button_send
+                                on_press: solution.text = app.on_button_press(button_send.text,solution.text)
+                            Button:
+                                text: '0'
+                                id: button_0
+                                on_press: solution.text = app.on_button_press(button_0.text,solution.text)
+                            Button:
+                                text: 'Очистка'
+                                id: button_clear
+                                on_press: solution.text = app.on_button_press(button_clear.text,solution.text)
+
+        # Экран Стаус
+        Screen:
+            name: 'screen_settings'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey_screen
+				Rectangle:
+					size: self.size
+            BoxLayout:
+                orientation: 'vertical'
+                ScrollView:
+
+                    BoxLayout:
+                        Label:
+                            text: 'Нет связи с передачтиком'
+        # Экран Авария
+        Screen:
+            name: 'alarm'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey_screen
+				Rectangle:
+					size: self.size
+            BoxLayout:
+                orientation: 'horizontal'
+                ScrollView:
+
+                    RelativeLayout:
+
+                        ToggleButton:
+                            id: alarm_button
+                            text: 'Отправить сигнал "Авария"?'
+                            size_hint: 0.4, 0.1
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            background_color: MainApp.background_color_red
+                            #on_state: self.text = 'Сигнал Авария отправка ...'
+                            on_state: app.on_button_press_alarm()
+
+
+
+
+    # Панель состояний
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: 0.1
+        canvas.before:
+		    Color:
+				rgba: MainApp.background_color_grey
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        Label:
+            text: 'Связь'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_green
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        Label:
+            text: 'Ант 1'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_green
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        Label:
+            text: 'Ант 2'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        Label:
+            text: 'Ант 3'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        Label:
+            text: 'Ант 4'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        Label:
+            text: 'Название шахты'
+            canvas.before:
+				Color:
+					rgba: MainApp.background_color_grey
+				Rectangle:
+					size: self.size
+					pos: self.pos
+        BoxLayout:
+            orientation: 'vertical'
+            Label:
+                markup: True
+                id: time
+                text: '00:00:00'
+                canvas.before:
+				    Color:
+					    rgba: MainApp.background_color_grey
+				    Rectangle:
+					    size: self.size
+					    pos: self.pos
+		BoxLayout:
+            orientation: 'vertical'
+            Label:
+                id: date
+                text: "00.00.00"
+                canvas.before:
+				    Color:
+					    rgba: MainApp.background_color_grey
+				    Rectangle:
+					    size: self.size
+					    pos: self.pos
